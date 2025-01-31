@@ -3,13 +3,18 @@ package main
 import (
 	"net/http"
 
+	"github.com/IceMAN2377/todo.git/configs"
 	"github.com/IceMAN2377/todo.git/internal/auth"
+	"github.com/IceMAN2377/todo.git/pkg/db"
 )
 
 func main() {
-	//_ := configs.LoadConfig()
+	cfg := configs.LoadConfig()
+	_ = db.NewDb(cfg)
 	router := http.NewServeMux()
-	auth.NewAuthHandler(router)
+	auth.NewAuthHandler(router, auth.AuthHandlerDeps{
+		Config: cfg,
+	})
 
 	server := http.Server{
 		Addr:    ":8080",
